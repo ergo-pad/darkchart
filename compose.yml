@@ -1,0 +1,36 @@
+version: '3.9'
+
+services:
+  darkchart:
+    container_name: darkchart
+    # image: python:3
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    env_file: ${ENV_FILE}
+    working_dir: /app
+    ports:
+      - 3275:3275
+    volumes:
+      - ./app:/app
+    networks:
+      - ergopad-net
+    command: uvicorn api:app --reload --workers 1 --reload-dir /app --host 0.0.0.0 --port 3275 --proxy-headers --use-colors
+    # command: watchmedo auto-restart --recursive --pattern="*.py" --directory="/app" -- python -m main
+    # command: tail /dev/null -f
+
+  timescaledb:
+    container_name: timescaledb
+    image: timescale/timescaledb-ha:pg14-latest
+    environment:
+      - POSTGRES_PASSWORD=password
+    ports:
+      - 5433:5432
+    volumes:
+      - /data/darkchart:/var/lib/postgresql/data 
+    networks:
+      - ergopad-net
+
+networks:
+  ergopad-net:
+    external: true

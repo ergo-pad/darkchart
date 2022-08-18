@@ -1,0 +1,14 @@
+requests
+colorlog
+base58
+pydantic
+# pandas
+
+fastapi
+fastapi_utils
+uvicorn
+
+sqlalchemy
+psycopg2
+
+ergo-python-appkit==0.1.0
